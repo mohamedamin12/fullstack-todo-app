@@ -26,20 +26,35 @@ export const TaskProvider = ({ children }) => {
   }, []);
 
   const addTask = async (taskData) => {
-    const { data } = await createTask(taskData);
-    setTasks((prev) => [data, ...prev]);
+    try {
+      const { data } = await createTask(taskData);
+      setTasks((prev) => [data, ...prev]);
+      toast.success("✅ تم إضافة المهمة بنجاح!");
+    } catch (error) {
+      toast.error("❌ فشل في إضافة المهمة!");
+    }
   };
 
   const updateTaskHandler = async (id, updatedData) => {
-    const { data } = await updateTask(id, updatedData);
-    setTasks((prev) =>
-      prev.map((task) => (task._id === id ? data : task))
-    );
+    try {
+      const { data } = await updateTask(id, updatedData);
+      setTasks((prev) =>
+        prev.map((task) => (task._id === id ? data : task))
+      );
+      toast.success("✏️ تم تعديل المهمة بنجاح!");
+    } catch (error) {
+      toast.error("❌ فشل في تعديل المهمة!");
+    }
   };
 
   const deleteTaskHandler = async (id) => {
-    await deleteTask(id);
-    setTasks((prev) => prev.filter((task) => task._id !== id));
+    try {
+      await deleteTask(id);
+      setTasks((prev) => prev.filter((task) => task._id !== id));
+      toast.info("🗑️ تم حذف المهمة بنجاح.");
+    } catch (error) {
+      toast.error("❌ فشل في حذف المهمة!");
+    }
   };
 
   const filteredTasks = useMemo(() => {

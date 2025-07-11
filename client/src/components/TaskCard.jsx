@@ -46,9 +46,17 @@ const TaskCard = ({ task, onTaskUpdated, onTaskDeleted }) => {
   }
 
   const handleEditSubmit = async () => {
-      onTaskUpdated(res.data);
+    try {
+      await onTaskUpdated(_id, {
+        title: editTitle,
+        description: editDesc,
+      });
       setEditOpen(false);
+    } catch (err) {
+      console.error("❌ فشل التعديل:", err);
+    }
   };
+  
 
   const handleDelete = async () => {
       onTaskDeleted(_id);
