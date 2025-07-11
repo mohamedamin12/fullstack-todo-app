@@ -23,7 +23,7 @@ const Home = () => {
   } = useTaskContext();
 
   return (
-    <div>
+    <div style={{ direction: "ltr" }}>
       <Typography
         variant="h4"
         align="center"
@@ -48,16 +48,16 @@ const Home = () => {
             الكل
           </Button>
           <Button
-            onClick={() => setFilter("pending")}
-            variant={filter === "pending" ? "contained" : "outlined"}
-          >
-            غير مكتملة
-          </Button>
-          <Button
             onClick={() => setFilter("completed")}
             variant={filter === "completed" ? "contained" : "outlined"}
           >
             مكتملة
+          </Button>
+          <Button
+            onClick={() => setFilter("pending")}
+            variant={filter === "pending" ? "contained" : "outlined"}
+          >
+            غير مكتملة
           </Button>
         </ButtonGroup>
       </Stack>
@@ -76,24 +76,24 @@ const Home = () => {
         </Typography>
       ) : (
         <Box
-        sx={{
-          maxHeight: "400px",
-          overflowY: "auto",
-          pr: 1, // padding right علشان شكل الـ scrollbar
-        }}
-      >
-        <Stack spacing={2}>
-          {filteredTasks.map((task) => (
-            <TaskCard
-              key={task._id}
-              task={task}
-              onTaskUpdated={updateTaskHandler}
-              onTaskDeleted={deleteTaskHandler}
-            />
-          ))}
-        </Stack>
-      </Box>
-      
+          sx={{
+            maxHeight: "400px",
+            overflowY: "auto",
+            pr: 1, // padding right علشان شكل الـ scrollbar
+          }}
+        >
+          <Stack spacing={2}>
+            {filteredTasks.map((task) => (
+              <TaskCard
+                key={task._id}
+                task={task}
+                onTaskUpdated={updateTaskHandler}
+                onTaskDeleted={deleteTaskHandler}
+              />
+            ))}
+          </Stack>
+        </Box>
+
       )}
     </div>
   );

@@ -1,11 +1,23 @@
 import React from "react";
-import { Container, Typography } from "@mui/material";
+import { Container, CssBaseline } from "@mui/material";
 import Home from "./pages/Home";
+
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+const theme = createTheme({
+  typography: {
+    fontFamily: "'Cairo', sans-serif",
+  },
+});
+
 
 function App() {
   return (
     <Container maxWidth="md">
-      <Home />
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Home />
+      </ThemeProvider>
     </Container>
   );
 }
