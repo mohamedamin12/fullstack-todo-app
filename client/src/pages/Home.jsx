@@ -9,52 +9,19 @@ import {
 import { fetchTasks } from "../services/api";
 import TaskCard from "../components/TaskCard";
 import AddTaskForm from "../components/AddTaskForm";
+import { useTaskContext } from "../contexts/TaskContext";
+
 
 const Home = () => {
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [filter, setFilter] = useState("all"); 
-
-  useEffect(() => {
-    const fetchTask = async () => {
-      try {
-        setLoading(true);
-        const { data } = await fetchTasks();
-        setTasks(data);
-      } catch (error) {
-        console.error("Error fetching tasks:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTask();
-  }, []);
-
-  const handleTaskAdded = (newTask) => {
-    setTasks((prev) => [newTask, ...prev]);
-  };
-
-  const handleTaskUpdated = (updatedTask) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task._id === updatedTask._id ? updatedTask : task
-      )
-    );
-  };
-
-  const handleTaskDeleted = (taskId) => {
-    setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId));
-  };
-
-  const filteredTasks = useMemo(() => {
-    if (filter === "completed") {
-      return tasks.filter((task) => task.isCompleted);
-    } else if (filter === "pending") {
-      return tasks.filter((task) => !task.isCompleted);
-    }
-    return tasks;
-  }, [tasks, filter]);
+  const {
+    filteredTasks,
+    filter,
+    setFilter,
+    loading,
+    addTask,
+    updateTaskHandler,
+    deleteTaskHandler,
+  } = useTaskContext();
 
   return (
     <div>
@@ -62,7 +29,7 @@ const Home = () => {
         قائمة المهام
       </Typography>
 
-      <AddTaskForm onTaskAdded={handleTaskAdded} />
+      <AddTaskForm onTaskAdded={addTask} />
 
       <Stack direction="row" spacing={2} mb={3}>
         <ButtonGroup variant="outlined">
@@ -105,8 +72,8 @@ const Home = () => {
             <TaskCard
               key={task._id}
               task={task}
-              onTaskUpdated={handleTaskUpdated}
-              onTaskDeleted={handleTaskDeleted}
+              onTaskUpdated={updateTaskHandler}
+              onTaskDeleted={deleteTaskHandler}
             />
           ))}
         </Stack>

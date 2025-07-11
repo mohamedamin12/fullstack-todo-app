@@ -46,27 +46,15 @@ const TaskCard = ({ task, onTaskUpdated, onTaskDeleted }) => {
   }
 
   const handleEditSubmit = async () => {
-    try {
-      const res = await updateTask(_id, {
-        title: editTitle,
-        description: editDesc,
-      });
       onTaskUpdated(res.data);
       setEditOpen(false);
-    } catch (err) {
-      console.error("❌ فشل التعديل:", err);
-    }
   };
 
   const handleDelete = async () => {
-    try {
-      await deleteTask(_id);
       onTaskDeleted(_id);
-      setConfirmOpen(false)
-    } catch (error) {
-      console.error("❌ فشل في الحذف:", error);
-    }
+      setConfirmOpen(false)    
   }
+
   return (
     <>
       <Card variant="outlined" sx={{ bgcolor: isCompleted ? "#e0ffe0" : "#fff" }}>
