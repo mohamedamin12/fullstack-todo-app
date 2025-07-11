@@ -1,5 +1,11 @@
-import React, { useEffect, useState , useMemo  } from "react";
-import { Typography, CircularProgress, Stack, ButtonGroup, Button } from "@mui/material";
+import React, { useEffect, useState, useMemo } from "react";
+import {
+  Typography,
+  CircularProgress,
+  Stack,
+  ButtonGroup,
+  Button,
+} from "@mui/material";
 import { fetchTasks } from "../services/api";
 import TaskCard from "../components/TaskCard";
 import AddTaskForm from "../components/AddTaskForm";
@@ -7,18 +13,22 @@ import AddTaskForm from "../components/AddTaskForm";
 const Home = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState("all"); 
 
   useEffect(() => {
     const fetchTask = async () => {
       try {
+        setLoading(true);
         const { data } = await fetchTasks();
         setTasks(data);
       } catch (error) {
         console.error("Error fetching tasks:", error);
+      } finally {
+        setLoading(false);
       }
-    }
-    fetchTask()
+    };
+
+    fetchTask();
   }, []);
 
   const handleTaskAdded = (newTask) => {
@@ -52,47 +62,57 @@ const Home = () => {
         قائمة المهام
       </Typography>
 
-      
       <AddTaskForm onTaskAdded={handleTaskAdded} />
 
       <Stack direction="row" spacing={2} mb={3}>
-      <ButtonGroup variant="outlined">
-        <Button
-          onClick={() => setFilter("all")}
-          variant={filter === "all" ? "contained" : "outlined"}
-        >
-          الكل
-        </Button>
-        <Button
-          onClick={() => setFilter("pending")}
-          variant={filter === "pending" ? "contained" : "outlined"}
-        >
-          غير مكتملة
-        </Button>
-        <Button
-          onClick={() => setFilter("completed")}
-          variant={filter === "completed" ? "contained" : "outlined"}
-        >
-          مكتملة
-        </Button>
-      </ButtonGroup>
-    </Stack>
+        <ButtonGroup variant="outlined">
+          <Button
+            onClick={() => setFilter("all")}
+            variant={filter === "all" ? "contained" : "outlined"}
+          >
+            الكل
+          </Button>
+          <Button
+            onClick={() => setFilter("pending")}
+            variant={filter === "pending" ? "contained" : "outlined"}
+          >
+            غير مكتملة
+          </Button>
+          <Button
+            onClick={() => setFilter("completed")}
+            variant={filter === "completed" ? "contained" : "outlined"}
+          >
+            مكتملة
+          </Button>
+        </ButtonGroup>
+      </Stack>
 
-      {
-        loading ? (
-          <CircularProgress />
-        ) : tasks.length === 0 ? (
-          <Typography color="text.secondary">لا توجد مهام حالياً</Typography>
-        ) : (
-          <Stack spacing={2}>
-            {tasks.map((task) => (
-              <TaskCard key={task._id} task={task} onTaskUpdated={handleTaskUpdated}   onTaskDeleted={handleTaskDeleted}/>
-            ))}
-          </Stack>
-        )
-      }
+      {loading ? (
+        <CircularProgress />
+      ) : filteredTasks.length === 0 ? (
+        <Typography color="text.secondary">
+          لا توجد مهام{" "}
+          {filter === "completed"
+            ? "مكتملة"
+            : filter === "pending"
+            ? "غير مكتملة"
+            : "حالياً"}
+          .
+        </Typography>
+      ) : (
+        <Stack spacing={2}>
+          {filteredTasks.map((task) => (
+            <TaskCard
+              key={task._id}
+              task={task}
+              onTaskUpdated={handleTaskUpdated}
+              onTaskDeleted={handleTaskDeleted}
+            />
+          ))}
+        </Stack>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
