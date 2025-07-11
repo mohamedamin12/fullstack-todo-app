@@ -13,17 +13,31 @@ export const TaskProvider = ({ children }) => {
     const loadTasks = async () => {
       try {
         setLoading(true);
+
+        const storedTasks = localStorage.getItem("tasks");
+        if (storedTasks) {
+          setTasks(JSON.parse(storedTasks));
+        }
+
         const { data } = await fetchTasks();
         setTasks(data);
+
+        localStorage.setItem("tasks", JSON.stringify(data));
+
       } catch (error) {
         console.error("Error fetching tasks:", error);
-      } 
-        
+      }
+
       setLoading(false);
-      
+
     };
     loadTasks();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+  
 
   const addTask = async (taskData) => {
     try {
@@ -51,7 +65,7 @@ export const TaskProvider = ({ children }) => {
     try {
       await deleteTask(id);
       setTasks((prev) => prev.filter((task) => task._id !== id));
-      toast.info("🗑️ تم حذف المهمة بنجاح.");
+      toast.success("🗑️ تم حذف المهمة بنجاح.");
     } catch (error) {
       toast.error("❌ فشل في حذف المهمة!");
     }

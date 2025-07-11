@@ -6,7 +6,6 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { createTask } from "../services/api";
 
 const AddTaskForm = ({ onTaskAdded }) => {
   const [title, setTitle] = useState("");
@@ -14,14 +13,13 @@ const AddTaskForm = ({ onTaskAdded }) => {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     if (!title.trim()) return;
-
     try {
       setLoading(true);
-      const { data } = await createTask({ title, description });
-      onTaskAdded(data);
+      onTaskAdded({ title, description });
       setTitle("");
       setDescription("");
     } catch (error) {
@@ -54,10 +52,9 @@ const AddTaskForm = ({ onTaskAdded }) => {
           <Button
             type="submit"
             variant="contained"
-            disabled={loading}
             fullWidth
           >
-            {loading ? "جاري الإضافة..." : "إضافة"}
+            اضافة 
           </Button>
         </Stack>
       </form>

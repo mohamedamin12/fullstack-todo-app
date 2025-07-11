@@ -1,12 +1,11 @@
-import React, { useEffect, useState, useMemo } from "react";
 import {
   Typography,
   CircularProgress,
   Stack,
   ButtonGroup,
   Button,
+  Box,
 } from "@mui/material";
-import { fetchTasks } from "../services/api";
 import TaskCard from "../components/TaskCard";
 import AddTaskForm from "../components/AddTaskForm";
 import { useTaskContext } from "../contexts/TaskContext";
@@ -25,8 +24,17 @@ const Home = () => {
 
   return (
     <div>
-      <Typography variant="h5" gutterBottom>
-        قائمة المهام
+      <Typography
+        variant="h4"
+        align="center"
+        gutterBottom
+        sx={{
+          fontWeight: 700,
+          color: "#1976d2",
+          textShadow: "0 2px 5px rgba(0,0,0,0.1)",
+        }}
+      >
+        📋 قائمة المهام
       </Typography>
 
       <AddTaskForm onTaskAdded={addTask} />
@@ -58,15 +66,22 @@ const Home = () => {
         <CircularProgress />
       ) : filteredTasks.length === 0 ? (
         <Typography color="text.secondary">
-          لا توجد مهام{" "}
+          لا توجد مهام
           {filter === "completed"
             ? "مكتملة"
             : filter === "pending"
-            ? "غير مكتملة"
-            : "حالياً"}
+              ? "غير مكتملة"
+              : "حالياً"}
           .
         </Typography>
       ) : (
+        <Box
+        sx={{
+          maxHeight: "400px",
+          overflowY: "auto",
+          pr: 1, // padding right علشان شكل الـ scrollbar
+        }}
+      >
         <Stack spacing={2}>
           {filteredTasks.map((task) => (
             <TaskCard
@@ -77,6 +92,8 @@ const Home = () => {
             />
           ))}
         </Stack>
+      </Box>
+      
       )}
     </div>
   );
